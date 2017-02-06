@@ -3,10 +3,11 @@
 #                                                                                        #
 #   Author:          Conor Tracey                                                        #
 #   Project Started: 1/31/2017                                                           #
-#   Latest Update:   1/31/2017                                                           #
+#   Latest Update:   1/06/2017                                                           #
 #                                                                                        #
-#   Credits:         Foundation of code taken from youtube tutorial by Zach King         #
-#                    (https://www.youtube.com/watch?v=xqDonHEYPgA)                       #
+#   Credits:         Original foundation of code taken from youtube tutorial             #
+#                       by Zach King                                                     #
+#                      (https://www.youtube.com/watch?v=xqDonHEYPgA)                     #                      #
 #                                                                                        #
 #   A basic text editor written in Python 3.4.3.                                         #
 ##########################################################################################
@@ -70,6 +71,32 @@ def openFile():
     t = file.read()   
     text.delete(0.0, tk.END)
     text.insert(0.0, t)
+
+###################################WORKSPACE##############################################
+
+def cut():
+    global root, text
+    
+    selected_text = text.selection_get()
+    root.clipboard_clear()
+    root.clipboard_append(selected_text)
+    text.delete(tk.SEL_FIRST, tk.SEL_LAST)
+    
+
+def copy():
+    global root, text
+
+    selected_text = text.selection_get()
+    root.clipboard_clear()
+    root.clipboard_append(selected_text)
+
+def paste():
+    global root, text
+
+    clipboard_text = root.clipboard_get()
+    text.insert(tk.INSERT, clipboard_text)
+    
+##########################################################################################
     
 
 root = tk.Tk()
@@ -79,8 +106,10 @@ root.maxsize(width=400, height=400)
 text = tk.Text(root, width=400, height=400)
 text.pack()
 
-#Configure file menu
+# CONFIGURE MENUBAR
 menubar = tk.Menu(root)
+
+## CONFIGURE FILE MENU
 filemenu = tk.Menu(menubar)
 filemenu.add_command(label="New", command=newFile)
 filemenu.add_command(label="Open", command=openFile)
@@ -88,8 +117,15 @@ filemenu.add_command(label="Save", command=saveFile)
 filemenu.add_command(label="Save As...", command=saveAs)
 filemenu.add_separator()
 filemenu.add_command(label="Quit", command=root.quit)
-menubar.add_cascade(label="File", menu=filemenu)
 
+##  CONFIGURE EDIT MENU
+editmenu = tk.Menu(menubar)
+editmenu.add_command(label="Cut", command=cut)
+editmenu.add_command(label="Copy", command=copy)
+editmenu.add_command(label="Paste", command=paste)
+
+menubar.add_cascade(label="File", menu=filemenu)
+menubar.add_cascade(label="Edit", menu=editmenu)
 root.config(menu=menubar)
 
 newFile()
