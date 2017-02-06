@@ -72,7 +72,6 @@ def openFile():
     text.delete(0.0, tk.END)
     text.insert(0.0, t)
 
-###################################WORKSPACE##############################################
 
 def cut():
     global root, text
@@ -95,8 +94,6 @@ def paste():
 
     clipboard_text = root.clipboard_get()
     text.insert(tk.INSERT, clipboard_text)
-    
-##########################################################################################
     
 
 root = tk.Tk()
