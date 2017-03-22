@@ -3,11 +3,11 @@
 #                                                                                        #
 #   Author:          Conor Tracey                                                        #
 #   Project Started: 1/31/2017                                                           #
-#   Latest Update:   1/06/2017                                                           #
+#   Latest Update:   3/22/2017                                                           #
 #                                                                                        #
 #   Credits:         Original foundation of code taken from youtube tutorial             #
 #                       by Zach King                                                     #
-#                      (https://www.youtube.com/watch?v=xqDonHEYPgA)                     #                      #
+#                      (https://www.youtube.com/watch?v=xqDonHEYPgA)                     #
 #                                                                                        #
 #   A basic text editor written in Python 3.4.3.                                         #
 ##########################################################################################
@@ -17,41 +17,43 @@ from tkinter import filedialog
 import os
 
 
-filename = None
+FILENAME = None
 
+def openPreferencesMenu():
+    pass
 
 def newFile():
-    global filename, text, root
-    filename = None
+    global FILENAME, text, root
+    FILENAME = None
     root.title("Untitled")
     text.delete(0.0, tk.END)
     
 
 def saveFile():
-    global filename, text
+    global FILENAME, text
     t = text.get(0.0, tk.END)
 
-    if filename == None:
+    if FILENAME == None:
         saveAs()
     else:
-        file = open(filename, 'w')
+        file = open(FILENAME, 'w')
         file.write(t)
         file.close()
     
 
 def saveAs():
-    global filename, text, root
+    global FILENAME, text, root
 
-    if filename == None:
+    if FILENAME == None:
         file = filedialog.asksaveasfile(mode = 'w', defaultextension='.txt')
     else:
         file = filedialog.asksaveasfile(mode = 'w',\
-                                    initialfile = filename[filename.rfind('/')+1:])
-    filename = file.name
+                                    initialfile = FILENAME[FILENAME.rfind('/')+1:])
+    FILENAME = file.name
     t = text.get(0.0, tk.END)
 
     #Change title of window to be the same as the f(ile name (without file path)
-    root.title(filename[filename.rfind('/')+1:])
+    root.title(FILENAME[FILENAME.rfind('/')+1:])
 
         
     try:
@@ -61,12 +63,12 @@ def saveAs():
         
 
 def openFile():
-    global filename, text, root
+    global FILENAME, text, root
     file = filedialog.askopenfile(mode='r')
-    filename = file.name
+    FILENAME = file.name
     
     #Change title of window to be the same as the file name (without file path)
-    root.title(filename[filename.rfind('/')+1:])
+    root.title(FILENAME[FILENAME.rfind('/')+1:])
         
     t = file.read()   
     text.delete(0.0, tk.END)
@@ -103,10 +105,13 @@ root.maxsize(width=400, height=400)
 text = tk.Text(root, width=400, height=400)
 text.pack()
 
-# CONFIGURE MENUBAR
+# CONFIGURE MENUBAR 
 menubar = tk.Menu(root)
 
-## CONFIGURE FILE MENU
+appmenu = tk.Menu(menubar)
+appmenu.add_command(label="Preferences", command=openPreferencesMenu)
+
+## CONFIGURE FILE MENU 
 filemenu = tk.Menu(menubar)
 filemenu.add_command(label="New", command=newFile)
 filemenu.add_command(label="Open", command=openFile)
@@ -115,7 +120,7 @@ filemenu.add_command(label="Save As...", command=saveAs)
 filemenu.add_separator()
 filemenu.add_command(label="Quit", command=root.quit)
 
-##  CONFIGURE EDIT MENU
+## CONFIGURE EDIT MENU
 editmenu = tk.Menu(menubar)
 editmenu.add_command(label="Cut", command=cut)
 editmenu.add_command(label="Copy", command=copy)
@@ -125,7 +130,10 @@ menubar.add_cascade(label="File", menu=filemenu)
 menubar.add_cascade(label="Edit", menu=editmenu)
 root.config(menu=menubar)
 
+# OPEN NEW FILE & LAUNCH PROGRAM
 newFile()
+
+# Move textEditor to foreground (Mac OS)
 os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python"\
           to true' ''')
 root.mainloop()
