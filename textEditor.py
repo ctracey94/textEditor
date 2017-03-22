@@ -9,7 +9,7 @@
 #                       by Zach King                                                     #
 #                      (https://www.youtube.com/watch?v=xqDonHEYPgA)                     #
 #                                                                                        #
-#   A basic text editor written in Python 3.4.3.                                         #
+#   A basic text editor written in Python 3.4.                                         #
 ##########################################################################################
 
 import tkinter as tk
@@ -20,7 +20,12 @@ import os
 FILENAME = None
 
 def openPreferencesMenu():
-    pass
+    winWidth = 400; winHeight = 400
+    
+    top = tk.Toplevel()
+    top.title("textEditor Preferences")
+    top.minsize(width=winWidth, height=winHeight)      
+    top.maxsize(width=winWidth, height=winHeight)
 
 def newFile():
     global FILENAME, text, root
@@ -98,6 +103,7 @@ def paste():
     text.insert(tk.INSERT, clipboard_text)
     
 
+# CONFIGURE DEFAULT WINDOW
 root = tk.Tk()
 root.minsize(width=400, height=400)
 root.maxsize(width=400, height=400)
@@ -126,6 +132,7 @@ editmenu.add_command(label="Cut", command=cut)
 editmenu.add_command(label="Copy", command=copy)
 editmenu.add_command(label="Paste", command=paste)
 
+menubar.add_cascade(label="textEditor", menu=appmenu)
 menubar.add_cascade(label="File", menu=filemenu)
 menubar.add_cascade(label="Edit", menu=editmenu)
 root.config(menu=menubar)
